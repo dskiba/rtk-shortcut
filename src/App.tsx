@@ -1,28 +1,49 @@
-import "./styles.css";
-import { useGetPokemonByNameQuery } from "./services/pokemon";
-import { useDispatch, useSelector } from "react-redux";
-import React, { SyntheticEvent, useDebugValue } from "react";
-import { setByKey } from "./store";
+import './styles.css'
+import { useDispatch, useSelector } from 'react-redux'
+import React from 'react'
+import { actionSeyByKey, IUser, selectUserField } from './store'
 
 export default function App() {
-  const { data, error, isLoading } = useGetPokemonByNameQuery("bulbasaur");
+  const name = useSelector(selectUserField('name'))
+  const surname = useSelector(selectUserField('surname'))
+  const country = useSelector(selectUserField('country'))
+  const city = useSelector(selectUserField('city'))
+  const hobbies = useSelector(selectUserField('hobbies'))
 
-  const state = useSelector((s: any) => s.test);
+  const dispatch = useDispatch()
 
-  const dispatch = useDispatch();
-  const handleChange = (field: "name" | "surname") => (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const { value } = e.target;
-    dispatch(setByKey({ k: field, v: value }));
-  };
+  const handleChange = (field: keyof IUser) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target
+    dispatch(actionSeyByKey(field, value))
+  }
 
   return (
     <div className="App">
-      <p>{JSON.stringify(state)}</p>
+      <h1>Redux-toolkit example</h1>
 
-      <input value={state.name} onChange={handleChange("name")} />
-      <input value={state.surname} onChange={handleChange("surname")} />
+      <label>
+        name
+        <input value={name} onChange={handleChange('name')} />
+      </label>
+      <label>
+        surname
+        <input value={surname} onChange={handleChange('surname')} />
+      </label>
+
+      <label>
+        country
+        <input value={country} onChange={handleChange('country')} />
+      </label>
+
+      <label>
+        city
+        <input value={city} onChange={handleChange('city')} />
+      </label>
+
+      <label>
+        hobbies
+        <input value={hobbies} onChange={handleChange('hobbies')} />
+      </label>
     </div>
-  );
+  )
 }
